@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --color-brand-900: 49 60 69;
+  --color-brand-700: 79 98 113;
+  --color-brand-500: 119 140 164;
+  --color-brand-300: 179 191 203;
+  --color-brand-100: 213 219 226;
+  --color-canvas: 247 249 251;
+  --color-panel: 255 255 255;
+}
