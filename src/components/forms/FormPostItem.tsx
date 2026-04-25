@@ -27,15 +27,15 @@ const initialValues: FormPostItemValues = {
 
 export function FormPostItem({
   category,
-  submitLabel = 'Simpan Postingan',
+  submitLabel = 'Submit Report',
   onSubmit,
 }: FormPostItemProps) {
   const [formValues, setFormValues] = useState<FormPostItemValues>(initialValues);
 
   const contactLabel =
     category === 'found'
-      ? 'Ditemukan oleh / penghubung'
-      : 'Nama penghubung';
+      ? 'Ditemukan oleh / Penghubung'
+      : 'Nama Penghubung';
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,40 +56,93 @@ export function FormPostItem({
 
   return (
     <form
-      className="space-y-6 rounded-3xl border border-white/70 bg-white/80 p-6 shadow-soft"
+      className="w-full space-y-8 rounded-[2rem] border border-brand-100 bg-white p-6 sm:p-10 shadow-soft"
       onSubmit={handleSubmit}
     >
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className="space-y-2 md:col-span-2">
-          <span className="text-sm font-semibold text-brand-900">
-            Nama Barang
+      {/* Area Upload Foto - Bergaya Drag & Drop */}
+      <div className="space-y-3">
+        <span className="text-sm font-bold tracking-wide text-brand-900">
+          Visual Documentation
+        </span>
+        <div className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand-300 bg-canvas py-14 transition-colors hover:bg-brand-100/50">
+          {/* Input file disembunyikan tapi menutupi seluruh area */}
+          <input
+            type="file"
+            accept="image/*"
+            className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+          />
+          {/* Icon Kamera */}
+          <svg
+            className="mb-3 h-10 w-10 text-brand-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+            />
+          </svg>
+          <span className="font-semibold text-brand-900">Upload Photo</span>
+          <span className="mt-1 text-xs text-brand-500">
+            Drag and drop or click to browse
+          </span>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <label className="space-y-2">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
+            Item Name
           </span>
           <input
             required
             name="title"
             value={formValues.title}
             onChange={handleChange}
-            placeholder="Contoh: Dompet kulit hitam"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none ring-0 transition focus:border-brand-500"
+            placeholder="e.g. Silver AirPods Case"
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">
-            Lokasi
+          <span className="text-sm font-bold tracking-wide text-brand-900">
+            Location
           </span>
           <input
             required
             name="location"
             value={formValues.location}
             onChange={handleChange}
-            placeholder="Contoh: Lobby Auditorium"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none ring-0 transition focus:border-brand-500"
+            placeholder="e.g. Science Library, 3rd Floor"
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+          />
+        </label>
+
+        <label className="space-y-2 md:col-span-2">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
+            Description
+          </span>
+          <textarea
+            required
+            rows={4}
+            name="description"
+            value={formValues.description}
+            onChange={handleChange}
+            placeholder="Provide any distinguishing features, markings, or conditions..."
+            className="w-full resize-none rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
             {contactLabel}
           </span>
           <input
@@ -97,13 +150,13 @@ export function FormPostItem({
             name="contactName"
             value={formValues.contactName}
             onChange={handleChange}
-            placeholder="Nama yang bisa dihubungi"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none ring-0 transition focus:border-brand-500"
+            placeholder="Nama kontak"
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
             WhatsApp
           </span>
           <input
@@ -112,51 +165,25 @@ export function FormPostItem({
             value={formValues.contactWhatsApp}
             onChange={handleChange}
             placeholder="08xxxxxxxxxx"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none ring-0 transition focus:border-brand-500"
-          />
-        </label>
-
-        <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">
-            Upload Foto
-          </span>
-          <input
-            type="file"
-            accept="image/*"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm text-brand-700 file:mr-4 file:rounded-full file:border-0 file:bg-brand-900 file:px-4 file:py-2 file:text-white"
-          />
-          <p className="text-xs text-brand-500">
-            Placeholder upload saja. Integrasi penyimpanan file bisa ditambahkan
-            di tahap berikutnya.
-          </p>
-        </label>
-
-        <label className="space-y-2 md:col-span-2">
-          <span className="text-sm font-semibold text-brand-900">
-            Deskripsi
-          </span>
-          <textarea
-            required
-            rows={5}
-            name="description"
-            value={formValues.description}
-            onChange={handleChange}
-            placeholder="Tambahkan detail barang, ciri khusus, dan konteks singkat."
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none ring-0 transition focus:border-brand-500"
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs text-brand-500">
-          Tanggal posting akan dibuat otomatis saat submit.
-        </p>
+      <div className="pt-4">
         <button
           type="submit"
-          className="rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-700 py-4 text-sm font-semibold text-white transition-all hover:bg-brand-900 focus:ring-4 focus:ring-brand-100 active:scale-[0.98]"
         >
+          {/* Icon Send / Submit */}
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
           {submitLabel}
         </button>
+        <p className="mt-4 text-center text-xs text-brand-500">
+          By submitting, you agree to our University Guidelines for community reporting.
+        </p>
       </div>
     </form>
   );
