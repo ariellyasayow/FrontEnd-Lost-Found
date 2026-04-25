@@ -31,7 +31,7 @@ export default function FoundItemsPage() {
       <PageHeader
         eyebrow="Daftar"
         title="Barang Ditemukan"
-        description="Halaman ini menampilkan daftar barang yang ditemukan lengkap dengan tanggal posting dan penghubung."
+        description="Lihat semua barang yang sudah ditemukan, telusuri lokasi singkatnya, lalu buka detail untuk menghubungi penghubung."
         action={
           <Link
             to={ROUTES.postFoundItem}
@@ -69,7 +69,12 @@ export default function FoundItemsPage() {
       {foundItems.length === 0 ? (
         <EmptyState
           title="Belum ada barang ditemukan"
-          description="Skeleton route sudah siap. Nanti data bisa dihubungkan ke API atau penyimpanan lokal."
+          description="Setelah user membuat laporan temuan, item akan langsung muncul di halaman ini."
+        />
+      ) : filteredItems.length === 0 ? (
+        <EmptyState
+          title="Barang tidak ditemukan"
+          description="Coba gunakan kata kunci lain dari nama barang, lokasi, atau deskripsi laporan."
         />
       ) : filteredItems.length === 0 ? (
         <EmptyState

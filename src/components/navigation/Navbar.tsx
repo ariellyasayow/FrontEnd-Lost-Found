@@ -12,9 +12,21 @@ function getDesktopLinkClass(isActive: boolean) {
     : 'border-b border-transparent pb-2 text-brand-500 hover:text-brand-900';
 }
 
+function getActionLinkClass(isActive: boolean, variant: 'outline' | 'solid') {
+  if (variant === 'outline') {
+    return isActive
+      ? 'rounded-full border border-brand-900 bg-brand-100/70 px-4 py-2 text-sm font-semibold text-brand-900 shadow-soft'
+      : 'rounded-full border border-brand-300 px-4 py-2 text-sm font-semibold text-brand-900 transition hover:border-brand-500';
+  }
+
+  return isActive
+    ? 'rounded-full bg-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-soft'
+    : 'rounded-full bg-brand-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700';
+}
+
 export function Navbar() {
   const { user } = useAuth();
-  const displayName = user?.profile.name || user?.email || 'Akun';
+  const displayName = user?.profile.name || user?.email || APP_NAME;
 
   return (
     <header className="sticky top-0 z-40 border-b border-brand-100/70 bg-white/92 backdrop-blur-xl">
@@ -39,28 +51,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-4 lg:flex">
-          <Link
-            to={ROUTES.account}
-            className="relative inline-flex h-10 w-10 items-center justify-center text-brand-900 transition hover:text-brand-700"
-            aria-label="Notifikasi"
+        <div className="hidden items-center gap-3 lg:flex">
+          <NavLink
+            to={ROUTES.postLostItem}
+            className={({ isActive }) => getActionLinkClass(isActive, 'outline')}
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.9"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M15 17h5l-1.4-1.4a2 2 0 0 1-.6-1.4V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5" />
-              <path d="M10.8 20a1.8 1.8 0 0 0 2.4 0" />
-            </svg>
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-          </Link>
-
+            Post Hilang
+          </NavLink>
+          <NavLink
+            to={ROUTES.postFoundItem}
+            className={({ isActive }) => getActionLinkClass(isActive, 'solid')}
+          >
+            Post Ditemukan
+          </NavLink>
           <Link
             to={ROUTES.account}
             className="max-w-[12rem] truncate rounded-full bg-brand-700 px-6 py-3 text-base font-medium text-white shadow-soft transition hover:bg-brand-900"

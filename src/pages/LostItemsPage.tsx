@@ -31,7 +31,7 @@ export default function LostItemsPage() {
       <PageHeader
         eyebrow="Daftar"
         title="Barang Hilang"
-        description="Halaman ini menyiapkan daftar barang hilang yang bisa dikembangkan dengan filter, pencarian, atau koneksi API di tahap berikutnya."
+        description="Jelajahi semua laporan barang hilang, cari berdasarkan nama atau lokasi, lalu buka detail item yang relevan."
         action={
           <Link
             to={ROUTES.postLostItem}
@@ -69,7 +69,12 @@ export default function LostItemsPage() {
       {lostItems.length === 0 ? (
         <EmptyState
           title="Belum ada laporan barang hilang"
-          description="Route dan kerangka list sudah siap. Data bisa dihubungkan ke sumber nyata nanti."
+          description="Setelah user membuat laporan baru, item akan langsung muncul di halaman ini."
+        />
+      ) : filteredItems.length === 0 ? (
+        <EmptyState
+          title="Barang tidak ditemukan"
+          description="Coba gunakan kata kunci lain dari nama barang, lokasi, atau deskripsi laporan."
         />
       ) : filteredItems.length === 0 ? (
         <EmptyState

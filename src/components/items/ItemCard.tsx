@@ -15,30 +15,30 @@ function getCategoryBadge(category: Item['category']) {
 export function ItemCard({ item }: ItemCardProps) {
   const locationLabel =
     item.category === 'found'
-      ? `Found at ${item.location}`
+      ? `Found in ${item.location}`
       : `Last seen near ${item.location}`;
 
   return (
-    <article className="group overflow-hidden rounded-[1.45rem] border border-brand-100/80 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(49,60,69,0.12)]">
+    <article className="group overflow-hidden rounded-[1.4rem] border border-brand-100/80 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(49,60,69,0.10)]">
       <Link to={buildItemDetailPath(item.id)} className="block">
-        <div className="relative overflow-hidden bg-brand-100/35">
+        <div className="relative overflow-hidden bg-brand-100/20">
           <img
             src={item.imageUrl}
             alt={item.title}
-            className="h-56 w-full object-cover transition duration-500 group-hover:scale-[1.025]"
+            className="h-48 w-full object-cover transition duration-500 group-hover:scale-[1.02]"
           />
 
           <div className="absolute right-3 top-3">
-            <span className="inline-flex rounded-full bg-brand-700/90 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
+            <span className="inline-flex rounded-full bg-brand-700/95 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-white shadow-sm">
               {getCategoryBadge(item.category)}
             </span>
           </div>
         </div>
       </Link>
 
-      <div className="space-y-4 px-4 pb-4 pt-3.5">
+      <div className="space-y-4 px-4 pb-4 pt-3">
         <div className="space-y-1">
-          <h2 className="line-clamp-2 min-h-[3.1rem] text-[0.98rem] font-medium leading-6 text-brand-900">
+          <h2 className="line-clamp-2 min-h-[2.9rem] text-[0.98rem] font-medium leading-6 text-brand-900">
             {item.title}
           </h2>
           <p className="line-clamp-2 text-[0.95rem] leading-6 text-brand-700">
@@ -46,12 +46,12 @@ export function ItemCard({ item }: ItemCardProps) {
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 text-xs text-brand-500">
+        <div className="flex items-center justify-between gap-3 text-[0.72rem] text-brand-500">
           <p>{formatDate(item.postedAt)}</p>
 
           <Link
             to={buildItemDetailPath(item.id)}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-brand-700 transition hover:bg-brand-100/50 hover:text-brand-900"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-brand-700 transition hover:bg-brand-100/60 hover:text-brand-900"
             aria-label={`Lihat detail ${item.title}`}
           >
             <svg
