@@ -9,7 +9,7 @@ import { useAuth } from '../hooks/useAuth';
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState('samuel.paat@unklab.ac.id');
+  const [email, setEmail] = useState('ariellya@unklab.ac.id');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -27,52 +27,64 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6 shadow-soft sm:p-8">
-      <div className="space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-brand-500">
-          Login UNKLAB
+    <div className="mx-auto max-w-md w-full rounded-[2.5rem] border border-brand-100 bg-white p-8 shadow-soft sm:p-12">
+      <div className="space-y-3 text-center">
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-500">
+          Campus Authentication
         </p>
-        <h2 className="font-display text-3xl text-brand-900">{APP_NAME}</h2>
-        <p className="text-sm leading-7 text-brand-700">
-          Form ini masih mock login. Flow berikutnya diarahkan ke halaman akun
-          agar profile bisa dilengkapi.
+        <h2 className="font-display text-4xl text-brand-900">{APP_NAME}</h2>
+        <p className="text-sm leading-relaxed text-brand-500">
+          Masuk dengan akun UNKLAB untuk mulai mencari atau melaporkan barang.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-        <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">
-            Email UNKLAB
-          </span>
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500"
-          />
-        </label>
+      <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+        <div className="space-y-4">
+          <label className="block space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-900">
+              Email UNKLAB
+            </span>
+            <input
+              required
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="w-full rounded-xl border border-brand-100 bg-canvas px-4 py-3.5 text-sm outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+              placeholder="nama@unklab.ac.id"
+            />
+          </label>
 
-        <label className="space-y-2">
-          <span className="text-sm font-semibold text-brand-900">Password</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Placeholder login kampus"
-            className="w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500"
-          />
-        </label>
+          <label className="block space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-900">
+              Password
+            </span>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-brand-100 bg-canvas px-4 py-3.5 text-sm outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+            />
+          </label>
+        </div>
 
-        {error ? <p className="text-sm text-rose-600">{error}</p> : null}
+        {error ? (
+          <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-600">
+            {error}
+          </div>
+        ) : null}
 
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+          className="w-full rounded-xl bg-brand-700 py-4 text-sm font-bold text-white shadow-lg transition-all hover:bg-brand-900 active:scale-[0.98]"
         >
-          Masuk
+          Masuk ke Aplikasi
         </button>
       </form>
+      
+      <p className="mt-8 text-center text-[10px] leading-relaxed text-brand-300">
+        Lost & Found UNKLAB &copy; 2026 <br/> Secure Student Environment
+      </p>
     </div>
   );
 }
