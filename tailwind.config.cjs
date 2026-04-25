@@ -23,7 +23,7 @@ module.exports = {
       },
       backgroundImage: {
         'campus-fade':
-          'radial-gradient(circle at top left, rgba(213, 219, 226, 0.65), transparent 40%), linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(247,249,251,1) 100%)',
+          'radial-gradient(circle at top center, rgba(201, 221, 244, 0.95), transparent 38%), radial-gradient(circle at left 16%, rgba(214, 230, 247, 0.9), transparent 30%), radial-gradient(circle at right 20%, rgba(205, 225, 245, 0.82), transparent 30%), radial-gradient(circle at bottom center, rgba(226, 237, 248, 0.72), transparent 34%), linear-gradient(180deg, rgba(244,248,253,1) 0%, rgba(230,240,249,1) 44%, rgba(240,246,252,1) 72%, rgba(247,249,251,1) 100%)',
       },
     },
   },

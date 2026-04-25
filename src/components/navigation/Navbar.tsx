@@ -12,6 +12,18 @@ function getDesktopLinkClass(isActive: boolean) {
     : 'text-brand-700 hover:text-brand-900';
 }
 
+function getActionLinkClass(isActive: boolean, variant: 'outline' | 'solid') {
+  if (variant === 'outline') {
+    return isActive
+      ? 'rounded-full border border-brand-900 bg-brand-100/70 px-4 py-2 text-sm font-semibold text-brand-900 shadow-soft'
+      : 'rounded-full border border-brand-300 px-4 py-2 text-sm font-semibold text-brand-900 transition hover:border-brand-500';
+  }
+
+  return isActive
+    ? 'rounded-full bg-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-soft'
+    : 'rounded-full bg-brand-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700';
+}
+
 export function Navbar() {
   const { user } = useAuth();
 
@@ -40,18 +52,18 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
+          <NavLink
             to={ROUTES.postLostItem}
-            className="rounded-full border border-brand-300 px-4 py-2 text-sm font-semibold text-brand-900 transition hover:border-brand-500"
+            className={({ isActive }) => getActionLinkClass(isActive, 'outline')}
           >
             Post Hilang
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={ROUTES.postFoundItem}
-            className="rounded-full bg-brand-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+            className={({ isActive }) => getActionLinkClass(isActive, 'solid')}
           >
             Post Ditemukan
-          </Link>
+          </NavLink>
           <div className="rounded-full bg-brand-100 px-4 py-2 text-sm text-brand-900">
             {user?.profile.name || user?.email || APP_NAME}
           </div>
