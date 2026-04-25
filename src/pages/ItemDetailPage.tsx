@@ -1,135 +1,143 @@
 import { Link, useParams } from 'react-router-dom';
 
 import { Container } from '../components/common/Container';
-import { PageHeader } from '../components/common/PageHeader';
-import { StatusBadge } from '../components/common/StatusBadge';
+import { EmptyState } from '../components/common/EmptyState';
 import { ITEM_CATEGORY_LABELS } from '../constants/itemCategory';
-import { ITEM_STATUS } from '../constants/itemStatus';
 import { ROUTES } from '../constants/routes';
-import { useAuth } from '../hooks/useAuth';
 import { useItems } from '../hooks/useItems';
 import { formatDate } from '../utils/formatDate';
 import { createWhatsAppLink } from '../utils/whatsapp';
 
 export default function ItemDetailPage() {
   const { id = '' } = useParams();
-  const { user } = useAuth();
-  const { getItemById, updateItemStatus } = useItems();
+  const { getItemById } = useItems();
   const item = getItemById(id);
 
   if (!item) {
     return (
-      <Container>
-        <div className="rounded-3xl border border-white/70 bg-white/80 p-8 shadow-soft">
-          <h1 className="font-display text-3xl text-brand-900">
-            Item tidak ditemukan
-          </h1>
-          <p className="mt-3 text-sm leading-7 text-brand-700">
-            Route detail sudah aktif, tetapi item dengan ID tersebut belum ada
-            di mock data.
-          </p>
-          <Link
-            to={ROUTES.home}
-            className="mt-5 inline-flex rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white"
-          >
-            Kembali ke Beranda
-          </Link>
-        </div>
+      <Container className="space-y-6">
+        <EmptyState
+          title="Item tidak ditemukan"
+          description="Detail barang belum bisa dibuka karena data item ini tidak ada."
+          action={
+            <Link
+              to={ROUTES.home}
+              className="inline-flex rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white"
+            >
+              Kembali ke Beranda
+            </Link>
+          }
+        />
       </Container>
     );
   }
 
-  const isOwner = user?.id === item.reportedByUserId;
-  const canMarkAsFound =
-    isOwner &&
-    item.category === 'lost' &&
-    item.status === ITEM_STATUS.ACTIVE;
+  const backRoute =
+    item.category === 'found' ? ROUTES.foundItems : ROUTES.lostItems;
+  const categoryLabel =
+    item.category === 'found' ? 'Verified Found' : 'Lost Report';
 
   return (
     <Container className="space-y-6">
-      <PageHeader
-        eyebrow={ITEM_CATEGORY_LABELS[item.category]}
-        title={item.title}
-        description="Detail item disiapkan untuk menampilkan informasi inti, kontak penghubung, dan aksi sederhana milik pelapor."
-        action={<StatusBadge status={item.status} />}
-      />
+      <Link
+        to={backRoute}
+        className="inline-flex items-center gap-2 text-sm font-medium text-brand-700 hover:text-brand-900"
+      >
+        <span aria-hidden="true">&larr;</span>
+        <span>Kembali ke daftar</span>
+      </Link>
 
-      <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <article className="overflow-hidden rounded-3xl border border-white/70 bg-white/80 shadow-soft">
-          <img
-            src={item.imageUrl}
-            alt={item.title}
-            className="h-80 w-full object-cover"
-          />
-          <div className="space-y-4 p-6">
-            <div className="grid gap-3 text-sm leading-7 text-brand-700 sm:grid-cols-2">
-              <p>
-                <span className="font-semibold text-brand-900">Lokasi:</span>{' '}
-                {item.location}
-              </p>
-              <p>
-                <span className="font-semibold text-brand-900">
-                  Tanggal posting:
-                </span>{' '}
-                {formatDate(item.postedAt)}
-              </p>
-              <p>
-                <span className="font-semibold text-brand-900">Pelapor:</span>{' '}
-                {item.reporterName}
-              </p>
-              <p>
-                <span className="font-semibold text-brand-900">
-                  Penghubung:
-                </span>{' '}
-                {item.contactName}
-              </p>
+      <section className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
+        <article className="overflow-hidden rounded-[2rem] border border-white/80 bg-white/92 p-3 shadow-soft">
+          <div className="relative overflow-hidden rounded-[1.5rem] bg-brand-100/35">
+            <img
+              src={item.imageUrl}
+              alt={item.title}
+              className="h-[28rem] w-full object-cover lg:h-[35rem]"
+            />
+
+            <div className="absolute left-4 top-4">
+              <span className="inline-flex items-center rounded-full bg-white/92 px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm">
+                {categoryLabel}
+              </span>
             </div>
-
-            <p className="text-sm leading-8 text-brand-700">{item.description}</p>
           </div>
         </article>
 
-        <aside className="space-y-5 rounded-3xl border border-white/70 bg-white/80 p-6 shadow-soft">
-          <div className="space-y-2">
-            <p className="text-sm font-semibold text-brand-500">
-              Kontak WhatsApp
-            </p>
-            <a
-              href={createWhatsAppLink(
-                item.contactWhatsApp,
-                `Halo ${item.contactName}, saya ingin menanyakan tentang ${item.title}.`,
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
-            >
-              Hubungi via WhatsApp
-            </a>
-          </div>
+        <aside className="space-y-5 lg:pt-4">
+          <div className="space-y-4">
+            <h1 className="max-w-lg font-display text-4xl leading-tight text-brand-900">
+              {item.title}
+            </h1>
 
-          {canMarkAsFound ? (
-            <div className="space-y-3 rounded-2xl bg-brand-100/60 p-4">
-              <p className="text-sm font-semibold text-brand-900">
-                Aksi Pelapor
-              </p>
-              <p className="text-sm leading-7 text-brand-700">
-                Karena ini item milik Anda, status barang hilang bisa diubah
-                menjadi sudah ditemukan dari halaman detail ini.
-              </p>
-              <button
-                type="button"
-                onClick={() => updateItemStatus(item.id, ITEM_STATUS.FOUND)}
-                className="rounded-full bg-brand-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
-              >
-                Tandai Sudah Ditemukan
-              </button>
+            <div className="flex flex-wrap items-center gap-3 text-sm text-brand-500">
+              <span className="rounded-full bg-brand-100/60 px-4 py-2">
+                {ITEM_CATEGORY_LABELS[item.category]}
+              </span>
+              <span>REF: #{item.id.toUpperCase()}</span>
             </div>
-          ) : null}
-
-          <div className="space-y-2 text-sm leading-7 text-brand-700">
-            <p>Route update status juga disiapkan dari halaman Barang Saya.</p>
-            <p>Belum ada backend, jadi perubahan status masih memakai context.</p>
           </div>
+
+          <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-white/88 px-5 py-4 shadow-soft">
+            <span className="text-sm text-brand-700">
+              Diposting pada {formatDate(item.postedAt)}
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-500">
+              Description
+            </p>
+            <p className="max-w-lg text-base leading-8 text-brand-700">
+              {item.description}
+            </p>
+          </div>
+
+          <div className="rounded-[1.6rem] border border-brand-100/80 bg-white/92 p-5 shadow-soft">
+            <div className="flex items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-100/70 text-brand-700">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z" />
+                  <circle cx="12" cy="10" r="2.5" />
+                </svg>
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-lg font-semibold text-brand-900">
+                  {item.location}
+                </p>
+                <p className="text-sm leading-7 text-brand-500">
+                  Penghubung: {item.contactName}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <a
+            href={createWhatsAppLink(
+              item.contactWhatsApp,
+              `Halo ${item.contactName}, saya ingin menanyakan tentang ${item.title}.`,
+            )}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-full items-center justify-center rounded-full bg-brand-500 px-6 py-4 text-sm font-semibold text-white transition hover:bg-brand-700"
+          >
+            Contact via WhatsApp
+          </a>
+
+          <p className="max-w-md text-center text-sm leading-7 text-brand-500 lg:text-left">
+            Silakan hubungi penghubung untuk konfirmasi detail barang sebelum
+            bertemu.
+          </p>
         </aside>
       </section>
     </Container>

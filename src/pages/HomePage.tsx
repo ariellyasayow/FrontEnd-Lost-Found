@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Container } from '../components/common/Container';
+import { EmptyState } from '../components/common/EmptyState';
 import { PageHeader } from '../components/common/PageHeader';
 import { ItemCard } from '../components/items/ItemCard';
 import { ROUTES } from '../constants/routes';
@@ -10,8 +12,22 @@ import { useItems } from '../hooks/useItems';
 export default function HomePage() {
   const { user } = useAuth();
   const { lostItems, foundItems } = useItems();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const spotlightItems = [...lostItems.slice(0, 1), ...foundItems.slice(0, 2)];
+  const spotlightItems = [...lostItems, ...foundItems];
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredSpotlightItems = spotlightItems.filter((item) => {
+    const haystack = [
+      item.title,
+      item.description,
+      item.location,
+      item.contactName,
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    return haystack.includes(normalizedQuery);
+  });
 
   return (
     <Container className="space-y-8">
@@ -61,11 +77,40 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="rounded-[1.75rem] border border-white/80 bg-white/88 p-3 shadow-soft">
+        <label className="flex items-center gap-3 rounded-[1.2rem] bg-canvas/80 px-4 py-3">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="h-5 w-5 shrink-0 text-brand-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Cari barang berdasarkan nama, lokasi, atau deskripsi..."
+            className="w-full bg-transparent text-sm text-brand-900 outline-none placeholder:text-brand-500"
+          />
+        </label>
+      </section>
+
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="font-display text-2xl text-brand-900">
-            Sorotan Laporan
-          </h2>
+          <div>
+            <h2 className="font-display text-2xl text-brand-900">
+              Sorotan Laporan
+            </h2>
+            <p className="mt-1 text-sm text-brand-700">
+              Laporan terbaru yang bisa langsung kamu jelajahi dari beranda.
+            </p>
+          </div>
           <Link
             to={ROUTES.lostItems}
             className="text-sm font-semibold text-brand-700 hover:text-brand-900"
@@ -74,11 +119,18 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {spotlightItems.map((item) => (
-            <ItemCard key={item.id} item={item} />
-          ))}
-        </div>
+        {filteredSpotlightItems.length === 0 ? (
+          <EmptyState
+            title="Barang tidak ditemukan"
+            description="Coba gunakan kata kunci lain dari nama barang, lokasi, atau deskripsi laporan."
+          />
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filteredSpotlightItems.map((item) => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
       </section>
     </Container>
   );
