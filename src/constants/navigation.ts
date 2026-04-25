@@ -6,11 +6,11 @@ export const primaryNavLinks = [
     to: ROUTES.home,
   },
   {
-    label: 'Hilang',
+    label: 'Barang Hilang',
     to: ROUTES.lostItems,
   },
   {
-    label: 'Ditemukan',
+    label: 'Barang Ditemukan',
     to: ROUTES.foundItems,
   },
   {
@@ -23,4 +23,25 @@ export const primaryNavLinks = [
   },
 ];
 
-export const mobileNavLinks = primaryNavLinks.slice(0, 4);
+export const mobileNavLinks = [
+  {
+    label: 'Beranda',
+    to: ROUTES.home,
+  },
+  {
+    label: 'Hilang',
+    to: ROUTES.lostItems,
+  },
+  {
+    label: 'Ditemukan',
+    to: ROUTES.foundItems,
+  },
+  {
+    label: 'Saya',
+    to: ROUTES.myItems,
+  },
+  {
+    label: 'Akun',
+    to: ROUTES.account,
+  },
+];
