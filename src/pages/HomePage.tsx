@@ -34,8 +34,8 @@ export default function HomePage() {
 
   return (
     <Container className="space-y-8">
-      <section className="rounded-[2.1rem] border border-white/80 bg-white/60 px-5 py-7 shadow-soft backdrop-blur sm:px-7 lg:px-10">
-        <div className="mx-auto max-w-4xl space-y-6 text-center">
+      <section className="mx-auto max-w-6xl rounded-[2.1rem] border border-white/80 bg-white/60 px-5 py-7 shadow-soft backdrop-blur sm:px-7 lg:px-10">
+        <div className="mx-auto max-w-[58rem] space-y-6 text-center">
           <div className="space-y-5">
             <h1 className="mx-auto max-w-3xl font-display text-3xl leading-[1.12] text-brand-900 sm:text-4xl sm:leading-[1.1] lg:text-[3.35rem] lg:leading-[1.08]">
               Recover what&apos;s yours. Return what isn&apos;t.
