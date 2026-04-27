@@ -1,19 +1,20 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+// src/routes/AppRouter.tsx
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { RouteGuard } from '../components/routes/RouteGuard';
-import { AuthLayout } from '../layouts/AuthLayout';
-import { AppShell } from '../layouts/AppShell';
-import AccountPage from '../pages/AccountPage';
-import FoundItemsPage from '../pages/FoundItemsPage';
-import HomePage from '../pages/HomePage';
-import ItemDetailPage from '../pages/ItemDetailPage';
-import LoginPage from '../pages/LoginPage';
-import LostItemsPage from '../pages/LostItemsPage';
-import MyItemsPage from '../pages/MyItemsPage';
-import NotFoundPage from '../pages/NotFoundPage';
-import PostFoundItemPage from '../pages/PostFoundItemPage';
-import PostLostItemPage from '../pages/PostLostItemPage';
-import { ROUTES } from '../constants/routes';
+import { RouteGuard } from "../components/routes/RouteGuard";
+import { AuthLayout } from "../layouts/AuthLayout";
+import { AppShell } from "../layouts/AppShell";
+import AccountPage from "../pages/AccountPage";
+import FoundItemsPage from "../pages/FoundItemsPage";
+import HomePage from "../pages/HomePage";
+import ItemDetailPage from "../pages/ItemDetailPage";
+import LoginPage from "../pages/LoginPage";
+import LostItemsPage from "../pages/LostItemsPage";
+import MyItemsPage from "../pages/MyItemsPage";
+import NotFoundPage from "../pages/NotFoundPage";
+import PostFoundItemPage from "../pages/PostFoundItemPage";
+import PostLostItemPage from "../pages/PostLostItemPage";
+import { ROUTES } from "../constants/routes";
 
 export function AppRouter() {
   return (

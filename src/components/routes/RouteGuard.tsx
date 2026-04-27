@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+// src/components/routes/RouteGuard.tsx
+import type { ReactNode } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { ROUTES } from '../../constants/routes';
-import { useAuth } from '../../hooks/useAuth';
+import { ROUTES } from "../../constants/routes";
+import { useAuth } from "../../hooks/useAuth";
 
 type RouteGuardProps = {
   children?: ReactNode;

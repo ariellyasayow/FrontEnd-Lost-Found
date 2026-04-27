@@ -1,6 +1,7 @@
-export type ItemCategory = 'lost' | 'found';
+// src/types/item.ts
+export type ItemCategory = "lost" | "found";
 
-export type ItemStatus = 'active' | 'found' | 'returned';
+export type ItemStatus = "active" | "found" | "returned";
 
 export interface Item {
   id: string;
