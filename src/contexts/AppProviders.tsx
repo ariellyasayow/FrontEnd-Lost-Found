@@ -1,7 +1,8 @@
-import type { PropsWithChildren } from 'react';
+// src/contexts/AppProviders.tsx
+import type { PropsWithChildren } from "react";
 
-import { AuthProvider } from './AuthContext';
-import { ItemsProvider } from './ItemsContext';
+import { AuthProvider } from "./AuthContext";
+import { ItemsProvider } from "./ItemsContext";
 
 export function AppProviders({ children }: PropsWithChildren) {
   return (

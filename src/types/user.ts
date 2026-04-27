@@ -1,3 +1,4 @@
+// src/types/user.ts
 export interface UserProfile {
   name: string;
   email: string;
