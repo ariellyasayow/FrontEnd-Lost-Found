@@ -86,7 +86,7 @@ export default function ItemDetailPage() {
 
           <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-500">
-              Description
+              Deskripsi
             </p>
             <p className="max-w-lg text-base leading-8 text-brand-700">
               {item.description}

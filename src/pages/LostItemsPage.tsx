@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Container } from '../components/common/Container';
 import { EmptyState } from '../components/common/EmptyState';
@@ -10,7 +10,9 @@ import { useItems } from '../hooks/useItems';
 
 export default function LostItemsPage() {
   const { lostItems } = useItems();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
+  const flash = (location.state as { flash?: string } | null)?.flash;
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const filteredItems = lostItems.filter((item) => {
@@ -42,6 +44,12 @@ export default function LostItemsPage() {
         }
       />
 
+      {flash ? (
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-700 shadow-soft">
+          {flash}
+        </div>
+      ) : null}
+
       <section className="rounded-[1.75rem] border border-white/80 bg-white/88 p-3 shadow-soft">
         <label className="flex items-center gap-3 rounded-[1.2rem] bg-canvas/80 px-4 py-3">
           <svg
@@ -69,12 +77,7 @@ export default function LostItemsPage() {
       {lostItems.length === 0 ? (
         <EmptyState
           title="Belum ada laporan barang hilang"
-          description="Setelah user membuat laporan baru, item akan langsung muncul di halaman ini."
-        />
-      ) : filteredItems.length === 0 ? (
-        <EmptyState
-          title="Barang tidak ditemukan"
-          description="Coba gunakan kata kunci lain dari nama barang, lokasi, atau deskripsi laporan."
+          description="Setelah Anda membuat laporan baru, item akan langsung muncul di halaman ini."
         />
       ) : filteredItems.length === 0 ? (
         <EmptyState

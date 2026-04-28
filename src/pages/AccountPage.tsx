@@ -141,7 +141,7 @@ export default function AccountPage() {
                 </div>
                 <div className="mt-4 text-center">
                   <p className="font-display text-lg text-brand-900 truncate w-48">
-                    {formValues.name || 'User UNKLAB'}
+                    {formValues.name || 'Pengguna UNKLAB'}
                   </p>
                   <p className="text-xs text-brand-500">Mahasiswa</p>
                 </div>

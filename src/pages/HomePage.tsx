@@ -119,12 +119,12 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-2 text-sm text-brand-700">
-              <span className="rounded-full bg-brand-100/70 px-3.5 py-2">
-                UNKLAB Campus
-              </span>
-              <span className="rounded-full border border-brand-100 px-3.5 py-2">
+              <button
+                type="button"
+                className="rounded-full bg-brand-900 px-4 py-2 font-semibold text-white shadow-sm transition hover:bg-brand-700"
+              >
                 Cari
-              </span>
+              </button>
             </div>
           </label>
         </div>

@@ -96,7 +96,9 @@ export default function MyItemsPage() {
 
                 {/* Area Aksi Kanan */}
                 <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
-                  <StatusBadge status={item.status} />
+                  {item.status !== ITEM_STATUS.ACTIVE ? (
+                    <StatusBadge status={item.status} />
+                  ) : null}
                   
                   {canMarkAsFound && (
                     <button
