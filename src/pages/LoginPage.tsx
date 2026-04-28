@@ -121,7 +121,7 @@ export default function LoginPage() {
         </h2>
         <p className="mt-2 text-xs leading-relaxed text-brand-100/70">
           {isSignUp
-            ? "Gunakan email kampus @unklab.ac.id"
+            ? "Gunakan email kampus @student.unklab.ac.id"
             : "Masuk untuk mengakses Lost & Found UNKLAB"}
         </p>
       </div>
@@ -150,7 +150,7 @@ export default function LoginPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email kampus"
+            placeholder="Email kampus (@student.unklab.ac.id)"
             className={inputClass}
           />
           <input
@@ -200,7 +200,7 @@ export default function LoginPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email kampus (@unklab.ac.id)"
+            placeholder="Email kampus (@student.unklab.ac.id)"
             className={inputClass}
           />
           <input
