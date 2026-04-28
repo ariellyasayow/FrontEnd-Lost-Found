@@ -13,6 +13,7 @@ type ItemsContextValue = {
   foundItems: Item[];
   myItems: Item[];
   isLoadingItems: boolean;
+  isLoadingMyItems: boolean;
   getItemById: (id: string) => Item | undefined;
   addItem: (input: CreateItemInput & { imageFile?: File }) => Promise<Item>;
   updateItemStatus: (id: string, status: ItemStatus) => Promise<void>;
@@ -40,13 +41,13 @@ function mapStatusToBackend(feStatus: ItemStatus): string {
 
 // ── Mapping data barang dari API ke tipe Item frontend ─────────────────────
 function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
-  // Foto dari backend adalah path relatif, jadikan URL ke backend
-  const imageUrl = b.foto
-    ? `http://localhost:8081/${b.foto.replace(/\\/g, "/")}`
+  // Foto dari backend adalah path relatif, jadikan URL langsung ke static file
+  // Backend sekarang serve folder uploads/ via /uploads/namafile
+  const fotoPath = b.foto ? b.foto.replace(/\\/g, "/") : "";
+  const imageUrl = fotoPath
+    ? `http://localhost:8081/${fotoPath}`
     : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80";
 
-  // Backend belum return category secara eksplisit di /api/products,
-  // kita derive dari field status
   const category: "lost" | "found" = b.status === "hilang" ? "lost" : "found";
 
   return {
@@ -58,8 +59,8 @@ function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
     imageUrl,
     location: b.lokasi,
     postedAt: b.tanggal_laporan,
-    // Backend belum return user info di list → pakai placeholder
-    reportedByUserId: "",
+    // Simpan user_id dari backend ke reportedByUserId untuk filter myItems
+    reportedByUserId: String(b.user_id),
     reporterName: "",
     contactName: "",
     contactWhatsApp: "",
@@ -68,7 +69,9 @@ function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
 
 export function ItemsProvider({ children }: PropsWithChildren) {
   const [items, setItems] = useState<Item[]>([]);
+  const [myItems, setMyItems] = useState<Item[]>([]);
   const [isLoadingItems, setIsLoadingItems] = useState(false);
+  const [isLoadingMyItems, setIsLoadingMyItems] = useState(false);
   const { user } = useAuth();
 
   // ── Fetch semua barang dari backend ─────────────────────────────────────
@@ -85,22 +88,32 @@ export function ItemsProvider({ children }: PropsWithChildren) {
     }
   }, []);
 
-  // Fetch saat pertama kali ada user (sudah login)
+  // ── Fetch barang milik user yang login ──────────────────────────────────
+  const refreshMyItems = useCallback(async () => {
+    if (!tokenStorage.get()) return;
+    setIsLoadingMyItems(true);
+    try {
+      const res = await itemsApi.getMyItems();
+      const mapped = (res.data ?? []).map(mapApiItemToItem);
+      setMyItems(mapped);
+    } catch (err) {
+      console.error("Gagal fetch my items:", err);
+    } finally {
+      setIsLoadingMyItems(false);
+    }
+  }, []);
+
+  // Fetch saat pertama kali ada token (sudah login)
   useEffect(() => {
     if (tokenStorage.get()) {
       refreshItems();
+      refreshMyItems();
     }
-  }, [refreshItems]);
+  }, [refreshItems, refreshMyItems]);
 
   const lostItems = items.filter((item) => item.category === "lost");
   const foundItems = items.filter((item) => item.category === "found");
-  // myItems: cocokkan berdasarkan user.id (setelah BE return user_id di list, bisa dipakai)
-  const myItems = user
-    ? items.filter(
-        (item) =>
-          item.reportedByUserId === user.id || item.reportedByUserId === "",
-      )
-    : [];
+  // myItems sekarang diambil dari endpoint /api/my-items yang sudah filter by user_id di backend
 
   const getItemById = (id: string) => items.find((item) => item.id === id);
 
@@ -130,6 +143,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
 
     // Refresh list agar data terbaru tampil
     await refreshItems();
+    await refreshMyItems();
 
     // Kembalikan item sementara (optimistic) untuk navigasi ke detail
     const optimisticItem: Item = {
@@ -158,6 +172,9 @@ export function ItemsProvider({ children }: PropsWithChildren) {
     setItems((current) =>
       current.map((item) => (item.id === id ? { ...item, status } : item)),
     );
+    setMyItems((current) =>
+      current.map((item) => (item.id === id ? { ...item, status } : item)),
+    );
 
     try {
       await itemsApi.updateStatus(Number(id), mapStatusToBackend(status));
@@ -165,6 +182,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
       console.error("Gagal update status:", err);
       // Rollback: refresh dari server
       await refreshItems();
+      await refreshMyItems();
     }
   };
 
@@ -176,6 +194,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
         foundItems,
         myItems,
         isLoadingItems,
+        isLoadingMyItems,
         getItemById,
         addItem,
         updateItemStatus,

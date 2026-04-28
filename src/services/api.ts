@@ -100,6 +100,7 @@ export type PostBarangResponse = {
 
 export const itemsApi = {
   getAll: () => request<ProductListResponse>("/api/products"),
+  getMyItems: () => request<ProductListResponse>("/api/my-items"),
   postHilang: (formData: FormData) =>
     request<PostBarangResponse>("/api/barang/hilang", {
       method: "POST",
