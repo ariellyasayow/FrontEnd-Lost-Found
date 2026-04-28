@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Container } from '../components/common/Container';
 import { EmptyState } from '../components/common/EmptyState';
 import { ItemCard } from '../components/items/ItemCard';
+import { getReportItemCategoryLabel } from '../constants/reportCategory';
 import { ROUTES } from '../constants/routes';
 import { useAuth } from '../hooks/useAuth';
 import { useItems } from '../hooks/useItems';
@@ -25,6 +26,7 @@ export default function HomePage() {
       item.description,
       item.location,
       item.contactName,
+      getReportItemCategoryLabel(item.itemType),
     ]
       .join(' ')
       .toLowerCase();

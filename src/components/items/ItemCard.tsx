@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { getReportItemCategoryLabel } from '../../constants/reportCategory';
 import { buildItemDetailPath } from '../../constants/routes';
 import type { Item } from '../../types';
 import { formatDate } from '../../utils/formatDate';
@@ -9,14 +10,15 @@ type ItemCardProps = {
 };
 
 function getCategoryBadge(category: Item['category']) {
-  return category === 'found' ? 'FOUND' : 'LOST';
+  return category === 'found' ? 'Ditemukan' : 'Hilang';
 }
 
 export function ItemCard({ item }: ItemCardProps) {
   const locationLabel =
     item.category === 'found'
-      ? `Found in ${item.location}`
-      : `Last seen near ${item.location}`;
+      ? `Ditemukan di ${item.location}`
+      : `Terakhir terlihat di ${item.location}`;
+  const itemTypeLabel = getReportItemCategoryLabel(item.itemType);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[1.4rem] border border-brand-100/80 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(49,60,69,0.10)]">
@@ -38,6 +40,9 @@ export function ItemCard({ item }: ItemCardProps) {
 
       <div className="flex flex-1 flex-col px-4 pb-4 pt-3">
         <div className="flex-1 space-y-1">
+          <span className="inline-flex w-fit rounded-full border border-brand-100 bg-canvas px-2.5 py-1 text-[0.68rem] font-bold text-brand-700">
+            {itemTypeLabel}
+          </span>
           <h2 className="line-clamp-2 min-h-[2.9rem] text-[0.98rem] font-medium leading-6 text-brand-900">
             {item.title}
           </h2>

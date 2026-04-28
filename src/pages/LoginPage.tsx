@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPasswordHelp, setShowPasswordHelp] = useState(false);
 
   const [namaDepan, setNamaDepan] = useState("");
   const [namaBelakang, setNamaBelakang] = useState("");
@@ -83,6 +84,7 @@ export default function LoginPage() {
     setIsSignUp(!isSignUp);
     setError("");
     setRegisterSuccess("");
+    setShowPasswordHelp(false);
   };
 
   const inputClass =
@@ -211,6 +213,23 @@ export default function LoginPage() {
             placeholder="Kata sandi"
             className={inputClass}
           />
+
+          <div className="-mt-1 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setShowPasswordHelp((current) => !current)}
+              className="text-xs font-semibold text-white/75 transition hover:text-white"
+            >
+              Lupa Password?
+            </button>
+          </div>
+
+          {showPasswordHelp && (
+            <p className="rounded-2xl border border-white/15 bg-white/[0.08] px-4 py-3 text-xs leading-6 text-brand-100/85">
+              Fitur pemulihan password sedang disiapkan. Untuk saat ini,
+              silakan hubungi admin kampus untuk bantuan pergantian password.
+            </p>
+          )}
 
           {error && <p className="text-center text-xs text-rose-300">{error}</p>}
           {registerSuccess && (

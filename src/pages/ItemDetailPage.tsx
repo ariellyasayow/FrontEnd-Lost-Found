@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Container } from '../components/common/Container';
 import { EmptyState } from '../components/common/EmptyState';
 import { ITEM_CATEGORY_LABELS } from '../constants/itemCategory';
+import { getReportItemCategoryLabel } from '../constants/reportCategory';
 import { ROUTES } from '../constants/routes';
 import { useItems } from '../hooks/useItems';
 import { formatDate } from '../utils/formatDate';
@@ -73,6 +74,9 @@ export default function ItemDetailPage() {
             <div className="flex flex-wrap items-center gap-3 text-sm text-brand-500">
               <span className="rounded-full bg-brand-100/60 px-4 py-2">
                 {ITEM_CATEGORY_LABELS[item.category]}
+              </span>
+              <span className="rounded-full border border-brand-100 bg-white px-4 py-2 text-brand-700">
+                {getReportItemCategoryLabel(item.itemType)}
               </span>
               <span>REF: #{item.id.toUpperCase()}</span>
             </div>

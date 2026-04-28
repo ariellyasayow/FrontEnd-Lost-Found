@@ -3,9 +3,14 @@ import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useEffect, useState } from "react";
 
 import { ITEM_STATUS } from "../constants/itemStatus";
+import { inferReportItemCategory } from "../constants/reportCategory";
 import { useAuth } from "../hooks/useAuth";
 import { itemsApi, tokenStorage } from "../services/api";
 import type { CreateItemInput, Item, ItemStatus } from "../types";
+import {
+  getRememberedReportItemCategory,
+  rememberReportItemCategory,
+} from "../utils/reportCategoryStorage";
 
 type ItemsContextValue = {
   items: Item[];
@@ -49,12 +54,23 @@ function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
     : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80";
 
   const category: "lost" | "found" = b.status === "hilang" ? "lost" : "found";
+  const itemType =
+    getRememberedReportItemCategory({
+      title: b.nama_barang,
+      description: b.deskripsi,
+      location: b.lokasi,
+    }) ??
+    inferReportItemCategory({
+      title: b.nama_barang,
+      description: b.deskripsi,
+    });
 
   return {
     id: String(b.id),
     title: b.nama_barang,
     description: b.deskripsi,
     category,
+    itemType,
     status: mapStatus(b.status),
     imageUrl,
     location: b.lokasi,
@@ -141,6 +157,13 @@ export function ItemsProvider({ children }: PropsWithChildren) {
       await itemsApi.postDitemukan(formData);
     }
 
+    rememberReportItemCategory({
+      title: input.title,
+      description: input.description,
+      location: input.location,
+      itemType: input.itemType,
+    });
+
     // Refresh list agar data terbaru tampil
     await refreshItems();
     await refreshMyItems();
@@ -151,6 +174,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
       title: input.title,
       description: input.description,
       category: input.category,
+      itemType: input.itemType,
       status: ITEM_STATUS.ACTIVE,
       imageUrl:
         input.imageUrl ??

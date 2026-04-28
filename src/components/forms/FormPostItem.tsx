@@ -2,11 +2,17 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
+import {
+  REPORT_ITEM_CATEGORY,
+  REPORT_ITEM_CATEGORY_OPTIONS,
+  type ReportItemCategory,
+} from "../../constants/reportCategory";
 import type { ItemCategory } from "../../types";
 
 export type FormPostItemValues = {
   title: string;
   description: string;
+  itemType: ReportItemCategory;
   location: string;
   contactName: string;
   contactWhatsApp: string;
@@ -22,6 +28,7 @@ type FormPostItemProps = {
 const initialValues: Omit<FormPostItemValues, "imageFile"> = {
   title: "",
   description: "",
+  itemType: REPORT_ITEM_CATEGORY.PERSONAL,
   location: "",
   contactName: "",
   contactWhatsApp: "",
@@ -48,7 +55,7 @@ export function FormPostItem({
       : "Contoh: Kafetaria UNKLAB";
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setFormValues((current) => ({ ...current, [name]: value }));
@@ -150,6 +157,25 @@ export function FormPostItem({
             placeholder="Contoh: Dompet hitam kulit"
             className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
+        </label>
+
+        <label className="space-y-2">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
+            Kategori
+          </span>
+          <select
+            required
+            name="itemType"
+            value={formValues.itemType}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+          >
+            {REPORT_ITEM_CATEGORY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label className="space-y-2">
