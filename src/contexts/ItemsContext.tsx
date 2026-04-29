@@ -53,7 +53,8 @@ function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
     ? `http://localhost:8081/${fotoPath}`
     : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80";
 
-  const category: "lost" | "found" = b.status === "hilang" ? "lost" : "found";
+  const category: "lost" | "found" =
+    b.tipe_laporan === "hilang" ? "lost" : "found";
   const itemType =
     getRememberedReportItemCategory({
       title: b.nama_barang,
@@ -127,8 +128,12 @@ export function ItemsProvider({ children }: PropsWithChildren) {
     }
   }, [refreshItems, refreshMyItems]);
 
-  const lostItems = items.filter((item) => item.category === "lost");
-  const foundItems = items.filter((item) => item.category === "found");
+  const lostItems = items.filter(
+    (item) => item.category === "lost" && item.status === ITEM_STATUS.ACTIVE,
+  );
+  const foundItems = items.filter(
+    (item) => item.category === "found" && item.status !== ITEM_STATUS.RETURNED,
+  );
   // myItems sekarang diambil dari endpoint /api/my-items yang sudah filter by user_id di backend
 
   const getItemById = (id: string) => items.find((item) => item.id === id);

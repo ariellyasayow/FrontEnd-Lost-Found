@@ -77,7 +77,9 @@ export default function MyItemsPage() {
               <div
                 key={item.id}
                 className={`flex flex-col gap-5 p-5 transition-colors hover:bg-brand-100/20 sm:flex-row sm:items-center sm:gap-6 sm:p-6 ${
-                  index !== myItems.length - 1 ? "border-b border-brand-100" : ""
+                  index !== myItems.length - 1
+                    ? "border-b border-brand-100"
+                    : ""
                 }`}
               >
                 <Link
@@ -140,6 +142,11 @@ export default function MyItemsPage() {
                     <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                       Menunggu Diambil
                     </span>
+                  ) : item.status === ITEM_STATUS.RETURNED &&
+                    item.category === "lost" ? (
+                    <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      Sudah Ditemukan
+                    </span>
                   ) : item.status !== ITEM_STATUS.ACTIVE ? (
                     <StatusBadge status={item.status} />
                   ) : null}
@@ -148,7 +155,7 @@ export default function MyItemsPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        updateItemStatus(item.id, ITEM_STATUS.FOUND)
+                        updateItemStatus(item.id, ITEM_STATUS.RETURNED)
                       }
                       className="rounded-xl border-2 border-brand-500 bg-transparent px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-500 hover:text-white active:scale-95"
                     >

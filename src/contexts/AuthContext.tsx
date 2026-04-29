@@ -12,7 +12,7 @@ type AuthContextValue = {
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
-  updateProfile: (profile: UserProfile) => void;
+  updateProfile: (profile: UserProfile) => Promise<void>;
 };
 
 export type RegisterData = {
@@ -111,13 +111,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setUser(null);
   };
 
-  // ── Update profile (lokal saja, belum ada endpoint PUT /api/profile di BE) ─
-  const updateProfile = (profile: UserProfile) => {
+  // ── Update profile (kirim ke backend, lalu update state lokal) ────────────
+  const updateProfile = async (profile: UserProfile) => {
+    // Pisah nama jadi nama_depan dan nama_belakang
+    const namaParts = profile.name.trim().split(" ");
+    const namaDepan = namaParts[0] ?? "";
+    const namaBelakang = namaParts.slice(1).join(" ");
+
+    await authApi.updateProfile({
+      nama_depan: namaDepan,
+      nama_belakang: namaBelakang,
+      no_whatsapp: profile.whatsapp,
+      nomor_registrasi: profile.regis,
+    });
+
     setUser((current) => {
       if (!current) return current;
       return {
         ...current,
-        email: profile.email,
         isProfileComplete: checkProfileComplete(profile),
         profile,
       };

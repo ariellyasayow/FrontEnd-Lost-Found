@@ -67,6 +67,16 @@ export const authApi = {
       body: JSON.stringify(data),
     }),
   getProfile: () => request<ProfileResponse>("/api/profile"),
+  updateProfile: (data: {
+    nama_depan: string;
+    nama_belakang: string;
+    no_whatsapp: string;
+    nomor_registrasi: string;
+  }) =>
+    request<{ message: string }>("/api/update-profile", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
   changePassword: (old_password: string, new_password: string) =>
     request<{ message: string }>("/api/change-password", {
       method: "POST",
@@ -81,6 +91,7 @@ export type BarangFromAPI = {
   nama_barang: string;
   deskripsi: string;
   status: string;
+  tipe_laporan: string; // 'hilang' atau 'ditemukan' (tipe awal, tidak berubah)
   lokasi: string;
   tanggal_laporan: string;
   foto: string;
