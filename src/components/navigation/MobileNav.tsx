@@ -5,15 +5,15 @@ import { Container } from '../common/Container';
 
 function getLinkClass(isActive: boolean) {
   return isActive
-    ? 'rounded-full bg-brand-900 px-3 py-2 text-xs font-semibold text-white'
-    : 'rounded-full px-3 py-2 text-xs font-semibold text-brand-700';
+    ? 'rounded-2xl bg-brand-700 px-3 py-2 text-[0.7rem] font-semibold text-white shadow-soft'
+    : 'rounded-2xl px-3 py-2 text-[0.7rem] font-semibold text-brand-500';
 }
 
 export function MobileNav() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-white/90 py-3 backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-brand-100/80 bg-white/95 py-3 backdrop-blur-xl lg:hidden">
       <Container>
-        <nav className="flex items-center justify-between gap-2">
+        <nav className="grid grid-cols-5 gap-2 rounded-[1.6rem] border border-brand-100/80 bg-white/92 p-2 shadow-soft">
           {mobileNavLinks.map((link) => (
             <NavLink
               key={link.to}

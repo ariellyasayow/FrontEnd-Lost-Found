@@ -1,12 +1,16 @@
-export type ItemCategory = 'lost' | 'found';
+// src/types/item.ts
+import type { ReportItemCategory } from "../constants/reportCategory";
 
-export type ItemStatus = 'active' | 'found' | 'returned';
+export type ItemCategory = "lost" | "found";
+
+export type ItemStatus = "active" | "found" | "returned";
 
 export interface Item {
   id: string;
   title: string;
   description: string;
   category: ItemCategory;
+  itemType?: ReportItemCategory;
   status: ItemStatus;
   imageUrl: string;
   location: string;
@@ -21,6 +25,7 @@ export interface CreateItemInput {
   title: string;
   description: string;
   category: ItemCategory;
+  itemType: ReportItemCategory;
   location: string;
   imageUrl?: string;
   status?: ItemStatus;

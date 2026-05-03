@@ -1,46 +1,50 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { Container } from '../components/common/Container';
-import { PageHeader } from '../components/common/PageHeader';
+import { Container } from "../components/common/Container";
+import { PageHeader } from "../components/common/PageHeader";
 import {
   FormPostItem,
   type FormPostItemValues,
-} from '../components/forms/FormPostItem';
-import { buildItemDetailPath } from '../constants/routes';
-import { useAuth } from '../hooks/useAuth';
-import { useItems } from '../hooks/useItems';
+} from "../components/forms/FormPostItem";
+import { PostTypeTabs } from "../components/items/PostTypeTabs";
+import { ROUTES } from "../constants/routes";
+import { useAuth } from "../hooks/useAuth";
+import { useItems } from "../hooks/useItems";
 
 export default function PostLostItemPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addItem } = useItems();
 
-  const handleSubmit = (values: FormPostItemValues) => {
+  const handleSubmit = async (values: FormPostItemValues) => {
     if (!user) {
-      return;
+      throw new Error("Sesi Anda tidak ditemukan. Silakan masuk ulang.");
     }
 
-    const newItem = addItem({
+    await addItem({
       ...values,
-      category: 'lost',
+      category: "lost",
       reportedByUserId: user.id,
       reporterName: user.profile.name || user.email,
+      imageFile: values.imageFile,
     });
 
-    navigate(buildItemDetailPath(newItem.id));
+    navigate(ROUTES.lostItems, {
+      state: { flash: "Barang hilang berhasil diposting." },
+    });
   };
 
   return (
     <Container className="space-y-6">
       <PageHeader
-        eyebrow="Post"
+        eyebrow="Laporan"
         title="Post Barang Hilang"
-        description="Form dasar sudah dipisahkan dari post barang ditemukan dan siap dikembangkan tanpa logika backend."
+        description="Isi informasi barang hilang dengan jelas agar komunitas UNKLAB lebih mudah membantu mencarinya."
       />
-
+      <PostTypeTabs />
       <FormPostItem
         category="lost"
-        submitLabel="Simpan Barang Hilang"
+        submitLabel="Post barang hilang"
         onSubmit={handleSubmit}
       />
     </Container>

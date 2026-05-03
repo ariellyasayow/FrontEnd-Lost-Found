@@ -1,46 +1,50 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { Container } from '../components/common/Container';
-import { PageHeader } from '../components/common/PageHeader';
+import { Container } from "../components/common/Container";
+import { PageHeader } from "../components/common/PageHeader";
 import {
   FormPostItem,
   type FormPostItemValues,
-} from '../components/forms/FormPostItem';
-import { buildItemDetailPath } from '../constants/routes';
-import { useAuth } from '../hooks/useAuth';
-import { useItems } from '../hooks/useItems';
+} from "../components/forms/FormPostItem";
+import { PostTypeTabs } from "../components/items/PostTypeTabs";
+import { ROUTES } from "../constants/routes";
+import { useAuth } from "../hooks/useAuth";
+import { useItems } from "../hooks/useItems";
 
 export default function PostFoundItemPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addItem } = useItems();
 
-  const handleSubmit = (values: FormPostItemValues) => {
+  const handleSubmit = async (values: FormPostItemValues) => {
     if (!user) {
-      return;
+      throw new Error("Sesi Anda tidak ditemukan. Silakan masuk ulang.");
     }
 
-    const newItem = addItem({
+    await addItem({
       ...values,
-      category: 'found',
+      category: "found",
       reportedByUserId: user.id,
       reporterName: user.profile.name || user.email,
+      imageFile: values.imageFile,
     });
 
-    navigate(buildItemDetailPath(newItem.id));
+    navigate(ROUTES.foundItems, {
+      state: { flash: "Barang ditemukan berhasil diposting." },
+    });
   };
 
   return (
     <Container className="space-y-6">
       <PageHeader
-        eyebrow="Post"
+        eyebrow="Laporan"
         title="Post Barang Ditemukan"
-        description="Halaman post ditemukan dipisahkan dari barang hilang agar flow user tetap sederhana dan mudah dipahami."
+        description="Isi lokasi dan ciri barang yang ditemukan agar pemiliknya dapat mengenali laporan ini."
       />
-
+      <PostTypeTabs />
       <FormPostItem
         category="found"
-        submitLabel="Simpan Barang Ditemukan"
+        submitLabel="Post barang ditemukan"
         onSubmit={handleSubmit}
       />
     </Container>

@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from 'react';
 
-import { APP_NAME } from '../constants/app';
 import { Container } from '../components/common/Container';
 
 export function AuthLayout({ children }: PropsWithChildren) {
@@ -15,8 +14,9 @@ export function AuthLayout({ children }: PropsWithChildren) {
             Fondasi tenang untuk laporan barang hilang dan ditemukan di UNKLAB.
           </h1>
           <p className="max-w-xl text-base leading-8 text-brand-700">
-            {APP_NAME} disiapkan dengan flow sederhana: login, lengkapi akun,
-            lihat daftar barang, dan buat posting baru tanpa alur admin.
+            Platform pelaporan digital yang aman dan terintegrasi untuk
+            mahasiswa. Buat laporan kehilangan atau temuan dengan cepat,
+            mandiri, dan tetap terhubung dengan komunitas kampus.
           </p>
         </section>
 
