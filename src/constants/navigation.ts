@@ -17,10 +17,6 @@ export const primaryNavLinks = [
     label: 'Barang Saya',
     to: ROUTES.myItems,
   },
-  {
-    label: 'Akun',
-    to: ROUTES.account,
-  },
 ];
 
 export const mobileNavLinks = [

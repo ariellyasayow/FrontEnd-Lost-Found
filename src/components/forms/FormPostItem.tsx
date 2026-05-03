@@ -2,11 +2,17 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 
+import {
+  REPORT_ITEM_CATEGORY,
+  REPORT_ITEM_CATEGORY_OPTIONS,
+  type ReportItemCategory,
+} from "../../constants/reportCategory";
 import type { ItemCategory } from "../../types";
 
 export type FormPostItemValues = {
   title: string;
   description: string;
+  itemType: ReportItemCategory;
   location: string;
   contactName: string;
   contactWhatsApp: string;
@@ -16,12 +22,13 @@ export type FormPostItemValues = {
 type FormPostItemProps = {
   category: ItemCategory;
   submitLabel?: string;
-  onSubmit: (values: FormPostItemValues) => void;
+  onSubmit: (values: FormPostItemValues) => void | Promise<void>;
 };
 
 const initialValues: Omit<FormPostItemValues, "imageFile"> = {
   title: "",
   description: "",
+  itemType: REPORT_ITEM_CATEGORY.PERSONAL,
   location: "",
   contactName: "",
   contactWhatsApp: "",
@@ -29,18 +36,26 @@ const initialValues: Omit<FormPostItemValues, "imageFile"> = {
 
 export function FormPostItem({
   category,
-  submitLabel = "Submit Report",
+  submitLabel = "Post laporan",
   onSubmit,
 }: FormPostItemProps) {
   const [formValues, setFormValues] = useState(initialValues);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const contactLabel =
     category === "found" ? "Ditemukan oleh / Penghubung" : "Nama Penghubung";
+  const locationLabel =
+    category === "found" ? "Lokasi ditemukan:" : "Lokasi terakhir hilang:";
+  const locationPlaceholder =
+    category === "found"
+      ? "Contoh: Perpustakaan lantai 2"
+      : "Contoh: Kafetaria UNKLAB";
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setFormValues((current) => ({ ...current, [name]: value }));
@@ -53,12 +68,23 @@ export function FormPostItem({
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit({ ...formValues, imageFile });
-    setFormValues(initialValues);
-    setImageFile(undefined);
-    setImagePreview(null);
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit({ ...formValues, imageFile });
+      setFormValues(initialValues);
+      setImageFile(undefined);
+      setImagePreview(null);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Laporan gagal dikirim.";
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -69,20 +95,20 @@ export function FormPostItem({
       {/* Upload Foto */}
       <div className="space-y-3">
         <span className="text-sm font-bold tracking-wide text-brand-900">
-          Visual Documentation
+          Dokumentasi Foto
         </span>
-        <div className="relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand-300 bg-canvas py-14 transition-colors hover:bg-brand-100/50 overflow-hidden">
+        <div className="relative flex cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-brand-300 bg-canvas py-14 transition-colors hover:bg-brand-100/50">
           <input
             type="file"
-            accept="image/jpeg,image/png"
+            accept=".jpg,.jpeg,.png,image/jpeg,image/png"
             onChange={handleFileChange}
             className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
           />
           {imagePreview ? (
             <img
               src={imagePreview}
-              alt="Preview"
-              className="h-40 w-full object-cover rounded-xl"
+              alt="Pratinjau foto barang"
+              className="h-40 w-full rounded-xl object-cover"
             />
           ) : (
             <>
@@ -104,9 +130,9 @@ export function FormPostItem({
                   d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
                 />
               </svg>
-              <span className="font-semibold text-brand-900">Upload Photo</span>
+              <span className="font-semibold text-brand-900">Unggah Foto</span>
               <span className="mt-1 text-xs text-brand-500">
-                Drag and drop or click to browse (JPEG / PNG)
+                Klik untuk memilih foto. Format: jpg/jpeg/png.
               </span>
             </>
           )}
@@ -121,35 +147,54 @@ export function FormPostItem({
       <div className="grid gap-6 md:grid-cols-2">
         <label className="space-y-2">
           <span className="text-sm font-bold tracking-wide text-brand-900">
-            Item Name
+            Nama Barang
           </span>
           <input
             required
             name="title"
             value={formValues.title}
             onChange={handleChange}
-            placeholder="e.g. Silver AirPods Case"
+            placeholder="Contoh: Dompet hitam kulit"
             className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
         <label className="space-y-2">
           <span className="text-sm font-bold tracking-wide text-brand-900">
-            Location
+            Kategori
+          </span>
+          <select
+            required
+            name="itemType"
+            value={formValues.itemType}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+          >
+            {REPORT_ITEM_CATEGORY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="space-y-2">
+          <span className="text-sm font-bold tracking-wide text-brand-900">
+            {locationLabel}
           </span>
           <input
             required
             name="location"
             value={formValues.location}
             onChange={handleChange}
-            placeholder="e.g. Science Library, 3rd Floor"
+            placeholder={locationPlaceholder}
             className="w-full rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
 
         <label className="space-y-2 md:col-span-2">
           <span className="text-sm font-bold tracking-wide text-brand-900">
-            Description
+            Deskripsi
           </span>
           <textarea
             required
@@ -157,7 +202,7 @@ export function FormPostItem({
             name="description"
             value={formValues.description}
             onChange={handleChange}
-            placeholder="Provide any distinguishing features, markings, or conditions..."
+            placeholder="Jelaskan ciri-ciri, warna, merek, atau kondisi barang."
             className="w-full resize-none rounded-xl border border-brand-100 bg-white px-4 py-3.5 text-sm text-brand-900 outline-none transition-all placeholder:text-brand-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </label>
@@ -178,7 +223,7 @@ export function FormPostItem({
 
         <label className="space-y-2">
           <span className="text-sm font-bold tracking-wide text-brand-900">
-            WhatsApp
+            Nomor WhatsApp
           </span>
           <input
             required
@@ -192,9 +237,15 @@ export function FormPostItem({
       </div>
 
       <div className="pt-4">
+        {submitError && (
+          <p className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+            {submitError}
+          </p>
+        )}
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-700 py-4 text-sm font-semibold text-white transition-all hover:bg-brand-900 focus:ring-4 focus:ring-brand-100 active:scale-[0.98]"
+          disabled={isSubmitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-700 py-4 text-sm font-semibold text-white transition-all hover:bg-brand-900 focus:ring-4 focus:ring-brand-100 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-65"
         >
           <svg
             className="h-4 w-4"
@@ -209,11 +260,10 @@ export function FormPostItem({
               d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
             />
           </svg>
-          {submitLabel}
+          {isSubmitting ? "Mengirim laporan..." : submitLabel}
         </button>
         <p className="mt-4 text-center text-xs text-brand-500">
-          By submitting, you agree to our University Guidelines for community
-          reporting.
+          Pastikan informasi sudah benar sebelum laporan diposting.
         </p>
       </div>
     </form>

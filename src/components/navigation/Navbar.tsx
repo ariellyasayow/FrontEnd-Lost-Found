@@ -9,7 +9,6 @@ const navbarLinks = [
   { label: 'Barang Hilang', to: ROUTES.lostItems, end: true },
   { label: 'Barang Ditemukan', to: ROUTES.foundItems, end: true },
   { label: 'Barang Saya', to: ROUTES.myItems, end: true },
-  { label: 'Akun', to: ROUTES.account, end: true },
 ];
 
 const actionLinks = [
@@ -26,18 +25,18 @@ function getNavClass(isActive: boolean) {
 function getActionClass(isActive: boolean, variant: 'outline' | 'solid') {
   if (variant === 'solid') {
     return isActive
-      ? 'rounded-full border border-[#314964] bg-[#314964] px-4 py-2 text-white shadow-[0_12px_24px_rgba(38,57,88,0.22)]'
-      : 'rounded-full border border-[#5c7492] bg-[#5c7492] px-4 py-2 text-white hover:-translate-y-0.5 hover:bg-[#314964] hover:shadow-[0_12px_24px_rgba(38,57,88,0.18)]';
+      ? 'rounded-full border border-[#24364b] bg-[#24364b] px-4 py-2 text-white shadow-[0_16px_30px_rgba(36,54,75,0.34)] ring-4 ring-[#9fb2ca]/40'
+      : 'rounded-full border border-[#5c7492] bg-[#5c7492] px-4 py-2 text-white shadow-[0_8px_18px_rgba(38,57,88,0.12)] hover:-translate-y-0.5 hover:bg-[#314964] hover:shadow-[0_12px_24px_rgba(38,57,88,0.18)]';
   }
 
   return isActive
-    ? 'rounded-full border border-[#6d83a0] bg-[#e7eff8] px-4 py-2 text-brand-900 shadow-[0_10px_22px_rgba(38,57,88,0.12)]'
-    : 'rounded-full border border-[#bccbdb] bg-[rgba(255,255,255,0.84)] px-4 py-2 text-brand-900 hover:-translate-y-0.5 hover:border-[#6d83a0] hover:bg-[#eef4fb] hover:shadow-[0_10px_20px_rgba(38,57,88,0.1)]';
+    ? 'rounded-full border border-[#24364b] bg-white px-4 py-2 text-brand-900 shadow-[0_16px_30px_rgba(36,54,75,0.22)] ring-4 ring-[#9fb2ca]/[0.35]'
+    : 'rounded-full border border-[#bccbdb] bg-[rgba(255,255,255,0.84)] px-4 py-2 text-brand-900 shadow-[0_8px_18px_rgba(38,57,88,0.08)] hover:-translate-y-0.5 hover:border-[#6d83a0] hover:bg-[#eef4fb] hover:shadow-[0_10px_20px_rgba(38,57,88,0.1)]';
 }
 
 export function Navbar() {
   const { user } = useAuth();
-  const accountLabel = user?.profile.name || user?.email || 'Akun';
+  const accountLabel = user?.profile.name || user?.email || 'Profil';
 
   return (
     <header className="sticky top-0 z-40 mb-4 border-b border-[#d8e2ef] bg-[rgba(236,242,250,0.96)] backdrop-blur-xl">
@@ -88,7 +87,7 @@ export function Navbar() {
           <div className="hidden items-center gap-3 lg:flex">
             <Link
               to={ROUTES.account}
-              className="max-w-[9.75rem] truncate rounded-full bg-brand-900 px-4 py-2.5 text-sm font-medium text-white shadow-[0_12px_24px_rgba(38,57,88,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-brand-800 hover:shadow-[0_14px_28px_rgba(38,57,88,0.24)]"
+              className="max-w-[11rem] truncate rounded-full bg-brand-900 px-4 py-2.5 text-sm font-medium text-white shadow-[0_12px_24px_rgba(38,57,88,0.2)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-[0_14px_28px_rgba(38,57,88,0.24)]"
             >
               {accountLabel}
             </Link>
@@ -97,9 +96,9 @@ export function Navbar() {
           <div className="flex items-center gap-3 lg:hidden">
             <Link
               to={ROUTES.account}
-              className="rounded-full border border-brand-500 bg-[rgba(236,242,250,0.92)] px-4 py-2 text-sm font-semibold text-brand-900 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand-700 hover:bg-white"
+              className="max-w-[10rem] truncate rounded-full border border-brand-500 bg-[rgba(236,242,250,0.92)] px-4 py-2 text-sm font-semibold text-brand-900 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand-700 hover:bg-white"
             >
-              Akun
+              {accountLabel}
             </Link>
           </div>
         </div>

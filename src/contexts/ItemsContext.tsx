@@ -3,9 +3,14 @@ import type { PropsWithChildren } from "react";
 import { createContext, useCallback, useEffect, useState } from "react";
 
 import { ITEM_STATUS } from "../constants/itemStatus";
+import { inferReportItemCategory } from "../constants/reportCategory";
 import { useAuth } from "../hooks/useAuth";
 import { itemsApi, tokenStorage } from "../services/api";
 import type { CreateItemInput, Item, ItemStatus } from "../types";
+import {
+  getRememberedReportItemCategory,
+  rememberReportItemCategory,
+} from "../utils/reportCategoryStorage";
 
 type ItemsContextValue = {
   items: Item[];
@@ -48,13 +53,25 @@ function mapApiItemToItem(b: import("../services/api").BarangFromAPI): Item {
     ? `http://localhost:8081/${fotoPath}`
     : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80";
 
-  const category: "lost" | "found" = b.status === "hilang" ? "lost" : "found";
+  const category: "lost" | "found" =
+    b.tipe_laporan === "hilang" ? "lost" : "found";
+  const itemType =
+    getRememberedReportItemCategory({
+      title: b.nama_barang,
+      description: b.deskripsi,
+      location: b.lokasi,
+    }) ??
+    inferReportItemCategory({
+      title: b.nama_barang,
+      description: b.deskripsi,
+    });
 
   return {
     id: String(b.id),
     title: b.nama_barang,
     description: b.deskripsi,
     category,
+    itemType,
     status: mapStatus(b.status),
     imageUrl,
     location: b.lokasi,
@@ -111,8 +128,12 @@ export function ItemsProvider({ children }: PropsWithChildren) {
     }
   }, [refreshItems, refreshMyItems]);
 
-  const lostItems = items.filter((item) => item.category === "lost");
-  const foundItems = items.filter((item) => item.category === "found");
+  const lostItems = items.filter(
+    (item) => item.category === "lost" && item.status === ITEM_STATUS.ACTIVE,
+  );
+  const foundItems = items.filter(
+    (item) => item.category === "found" && item.status !== ITEM_STATUS.RETURNED,
+  );
   // myItems sekarang diambil dari endpoint /api/my-items yang sudah filter by user_id di backend
 
   const getItemById = (id: string) => items.find((item) => item.id === id);
@@ -141,6 +162,13 @@ export function ItemsProvider({ children }: PropsWithChildren) {
       await itemsApi.postDitemukan(formData);
     }
 
+    rememberReportItemCategory({
+      title: input.title,
+      description: input.description,
+      location: input.location,
+      itemType: input.itemType,
+    });
+
     // Refresh list agar data terbaru tampil
     await refreshItems();
     await refreshMyItems();
@@ -151,6 +179,7 @@ export function ItemsProvider({ children }: PropsWithChildren) {
       title: input.title,
       description: input.description,
       category: input.category,
+      itemType: input.itemType,
       status: ITEM_STATUS.ACTIVE,
       imageUrl:
         input.imageUrl ??

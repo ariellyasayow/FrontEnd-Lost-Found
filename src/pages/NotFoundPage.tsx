@@ -17,8 +17,8 @@ export default function NotFoundPage() {
           Halaman tidak ditemukan
         </h1>
         <p className="mt-4 text-sm leading-7 text-brand-700">
-          Route fallback sudah aktif. Kamu bisa kembali ke halaman utama aplikasi
-          atau ke halaman login sesuai status user.
+          Route fallback sudah aktif. Anda bisa kembali ke halaman utama
+          aplikasi atau ke halaman login sesuai status akun Anda.
         </p>
         <Link
           to={isAuthenticated ? ROUTES.home : ROUTES.login}
